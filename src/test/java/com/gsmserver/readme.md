@@ -1,0 +1,6 @@
+- Plain Selenium
+- selenide
+- copilot vs aws
+- playwright
+- chatGPT
+- IDEA ai

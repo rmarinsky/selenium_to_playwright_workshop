@@ -1,5 +1,6 @@
 package com.gsmserver;
 
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -8,6 +9,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 import static org.openqa.selenium.By.cssSelector;
@@ -46,6 +51,26 @@ public class SeleniumTests {
                 .getText();
 
         Assertions.assertEquals(targetProductName, actualProductName);
+    }
+
+
+    @Test
+    @DisplayName("Slendie open product and cart check")
+    void slendieOpenProductAndCartCheck() {
+        Configuration.pageLoadTimeout = 100000;
+
+        open("https://gsmserver.com/en/");
+        String targetProductName = "Sigma Plus Box";
+        $($("#searchbox input")).setValue(targetProductName + Keys.ENTER);
+
+        $("[name=product-card] [title='Sigma Plus Box']").click();
+
+        $("[space='page/product/price-block'] .btn-buy").click();
+        $("[space='page/product/price-block'] [name='quantity']").shouldBe(visible);
+
+        $("[space='widget/cart/header-block']").click();
+
+        $("[space='component/product/tiny'] [name='title']").shouldHave(text(targetProductName));
     }
 
     private WebElement waitForElement(WebDriver driver, By by) {
